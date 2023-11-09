@@ -3,15 +3,15 @@
 #include "qdebug.h"
 #include <QtGlobal>
 
-#include  "../QMidi/src/QMidiIn.h"
-#include  "../QMidi/src/QMidiOut.h"
-#include  "../QMidi/src/QMidiFile.h"
+#include  "../CMidi/src/CMidiIn.h"
+#include  "../CMidi/src/CMidiOut.h"
+#include  "../CMidi/src/CMidiFile.h"
 
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
 {
-    QMidiOut * midi_out = new QMidiOut();
-    QMidiIn * midi_in = new QMidiIn();
+    CMidiOut * midi_out = new CMidiOut();
+    CMidiIn * midi_in = new CMidiIn();
 
     QMap<QString,QString> devs = midi_out->devices();
 
