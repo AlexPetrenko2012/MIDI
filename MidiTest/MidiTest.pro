@@ -22,7 +22,8 @@ HEADERS += \
     ../CMidi/src/CMidiFile.h \
     ../CMidi/src/CMidiIn.h \
     ../CMidi/src/CMidiOut.h \
-    dialog.h
+    dialog.h\
+    ui_dialog.h
 
 linux* {
         LIBS += -lasound
@@ -35,6 +36,9 @@ win32 {
         SOURCES += ../CMidi/src/OS/CMidi_Win32.cpp
 }
 
+FORMS += \
+    dialog.ui \
+    dialog.ui
 
 
 

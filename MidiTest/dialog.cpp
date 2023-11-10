@@ -1,4 +1,5 @@
 #include "dialog.h"
+#include "ui_dialog.h"
 
 #include "qdebug.h"
 #include <QtGlobal>
@@ -8,8 +9,11 @@
 #include  "../CMidi/src/CMidiFile.h"
 
 Dialog::Dialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),ui(new Ui::Dialog)
 {
+
+     ui->setupUi(this);
+
     CMidiOut * midi_out = new CMidiOut();
     CMidiIn * midi_in = new CMidiIn();
 
