@@ -213,6 +213,10 @@ void CMidiIn::disconnect()
 	if (!fConnected)
 		return;
 
+    if (fStarted)
+        stop();
+
+
 	QStringList l = fDeviceId.split(":");
 	int client = l.at(0).toInt();
 	int port = l.at(1).toInt();
@@ -227,16 +231,17 @@ void CMidiIn::disconnect()
 
 void CMidiIn::start()
 {
-	if (!fConnected)
+    if (!fConnected || fStarted)
 		return;
 
     fMidiPtrs->receiveThread = new CMidiInternal::MidiInReceiveThread(this, fMidiPtrs);
 	fMidiPtrs->receiveThread->start();
+    fStarted = true;
 }
 
 void CMidiIn::stop()
 {
-	if (!fConnected)
+    if (!fConnected || !fStarted)
 		return;
 
 	fMidiPtrs->receiveThread->requestInterruption();

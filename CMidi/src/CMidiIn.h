@@ -72,4 +72,5 @@ private:
 	QString fDeviceId;
 	NativeMidiInInstances* fMidiPtrs;
 	bool fConnected;
+    bool fStarted;
 };
