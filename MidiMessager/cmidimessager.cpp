@@ -1,32 +1,27 @@
 //****************************************
 //
-// author: Petrenko Alexandr   12.10.2023
+// author: Petrenko Alexandr   2.12.2023
 //
 //*****************************************
 
 
 
-
-#include "dialog.h"
-#include "ui_dialog.h"
+#include "cmidimessager.h"
 
 #include "qdebug.h"
+#include <iostream>
+#include  <sstream>
+
 #include <QtGlobal>
 
-#include <iostream>
-
-#include  <sstream>
 
 #include  "../CMidi/src/CMidiOut.h"
 #include  "../CMidi/src/CMidiFile.h"
 
-Dialog::Dialog(QWidget *parent)
-    : QDialog(parent),ui(new Ui::Dialog),fConnected(false)
-{
-    ui->setupUi(this);
 
-    QObject::connect (ui->btnConnect,SIGNAL(clicked()), this, SLOT(onBtnConnect_clicked()));
-    QObject::connect (ui->cmbxMidiInputs,SIGNAL(currentIndexChanged(int)), this, SLOT(onCmbxMidiInputs_currentIndexChanged(int)));
+
+CMidiMessager::CMidiMessager()
+{
 
 
     CMidiOut * midi_out = new CMidiOut(); // TODO перенести в класс.
@@ -41,19 +36,19 @@ Dialog::Dialog(QWidget *parent)
         it.next();
         qDebug() << it.key() << ": " << it.value() << Qt::endl;
         deviseIDs.append(it.key());
-        ui->cmbxMidiInputs->addItem(QString("%1 %2").arg(it.value()).arg(it.key()));
-    }
-
+      }
 
 
 }
 
-Dialog::~Dialog()
+
+CMidiMessager::~CMidiMessager()
 {
+
 }
 
 
-void Dialog::connectAndStart()
+void CMidiMessager::connectAndStart()
 {
     if(fConnected)
         return;
@@ -74,12 +69,12 @@ void Dialog::connectAndStart()
     }
 
     midi_in->start();
-    ui->btnConnect->setChecked(true);
-    ui->btnConnect->setText("Disconect");
-    fConnected = true;
+//    ui->btnConnect->setChecked(true);
+//    ui->btnConnect->setText("Disconect");
+//    fConnected = true;
 }
 
-void Dialog::disconnectAndStop()
+void CMidiMessager::disconnectAndStop()
 {
     if(!fConnected)
         return;
@@ -88,20 +83,20 @@ void Dialog::disconnectAndStop()
     midi_in->stop();
     midi_in->disconnect();
 
-    ui->btnConnect->setChecked(false);
-    ui->btnConnect->setText("Connect");
+//    ui->btnConnect->setChecked(false);
+//    ui->btnConnect->setText("Connect");
     fConnected = false;
 
-    QString deviseID = deviseIDs.at(ui->cmbxMidiInputs->currentIndex());
+//    QString deviseID = deviseIDs.at(ui->cmbxMidiInputs->currentIndex());
 
 
-    qDebug() << "Disonnected from" << deviseID;
+   // qDebug() << "Disonnected from" << deviseID;
 }
 
 
 
 
-void Dialog::onMidiEvent(quint32 message, quint32 timing)
+void CMidiMessager::onMidiEvent(quint32 message, quint32 timing)
 {
 
     QMidiEvent event;
@@ -112,37 +107,10 @@ void Dialog::onMidiEvent(quint32 message, quint32 timing)
 
     ss <<  event.type() << "  " << event.note() << "  " << event.velocity() << "\n";
 
-    ui->textEdit->append(QString().fromStdString(ss.str()));
+    // ui->textEdit->append(QString().fromStdString(ss.str()));
 
     qDebug() << "received event:" << event.type()
              << "note:" << event.note()
              << "velocity:" << event.velocity();
 
 }
-
-void Dialog :: onBtnConnect_clicked()
-
-{
-    if (!ui->btnConnect->isChecked())
-        disconnectAndStop();
-    else
-    {
-        connectAndStart();
-        ui->btnConnect->setEnabled(false); // todo
-        ui->cmbxMidiInputs->setEnabled(false); // todo
-
-    }
-}
-
-void Dialog::onCmbxMidiInputs_currentIndexChanged(int Index)
-{
-    return;
-
-    if (Index==-1)
-        return;
-
-    if (ui->btnConnect->isChecked())
-        disconnectAndStop();
-
-}
-
