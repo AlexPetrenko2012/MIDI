@@ -24,7 +24,7 @@ private:
     QList<QString> deviseIDs;
     bool fConnected;
 
-private:
+public:
 
     void connectAndStart();
     void disconnectAndStop();
